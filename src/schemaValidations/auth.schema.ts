@@ -2,6 +2,14 @@ import z from "zod";
 
 export const RegisterBody = z
   .object({
+    username: z
+      .string()
+      .min(3, "Tên đăng nhập phải có ít nhất 3 ký tự")
+      .max(30, "Tên đăng nhập không được vượt quá 30 ký tự")
+      .regex(
+        /^[a-zA-Z0-9_]+$/,
+        "Tên đăng nhập chỉ được chứa chữ cái, số và dấu gạch dưới"
+      ),
     email: z.string().email("Email không hợp lệ"),
     password: z
       .string()

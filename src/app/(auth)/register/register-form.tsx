@@ -16,9 +16,10 @@ import {
   RegisterBody,
   RegisterBodyType,
 } from "@/schemaValidations/auth.schema";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { MultiSelect } from "../../../../components/multi-select";
+import { registerAPI } from "@/app/api/auth/auth";
 const servicesList = [
   { value: "traveloki", label: "Traveloki" },
   { value: "emart", label: "Emart" },
@@ -27,22 +28,33 @@ const servicesList = [
 ];
 
 export default function RegisterForm() {
+  useEffect(() => {}, []);
   const router = useRouter();
   const [selectedServices, setSelectedServices] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const form = useForm<RegisterBodyType>({
     resolver: zodResolver(RegisterBody),
     defaultValues: {
+      username: "",
       email: "",
       password: "",
       confirmPassword: "",
     },
   });
 
-  function onSubmit(values: RegisterBodyType) {
-    setIsLoading(!isLoading);
-    console.log(selectedServices);
-    console.log(values);
+  async function onSubmit(values: RegisterBodyType) {
+    const { username, password, email } = values;
+    setIsLoading(true);
+    try {
+      const res = await registerAPI({ name: username, password, email });
+      if (res.status === 200) {
+        router.push("/verify");
+      }
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setIsLoading(false);
+    }
   }
 
   return (
@@ -51,6 +63,24 @@ export default function RegisterForm() {
         onSubmit={form.handleSubmit(onSubmit)}
         className="space-y-2 max-w-[600px] flex-shrink-0 w-full"
       >
+        <FormField
+          control={form.control}
+          name="username"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel className="text-gray-500">Tên đăng nhập</FormLabel>
+              <FormControl>
+                <Input
+                  placeholder="Nhập tên đăng nhập"
+                  {...field}
+                  className="focus:border-[#0D99FF] focus:ring-[#0D99FF] text-gray-600"
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
         <FormField
           control={form.control}
           name="email"
@@ -81,7 +111,7 @@ export default function RegisterForm() {
                   placeholder="8+ characters"
                   type="password"
                   {...field}
-                  className=" focus:border-[#0D99FF] focus:ring-[#0D99FF] text-gray-600"
+                  className="focus:border-[#0D99FF] focus:ring-[#0D99FF] text-gray-600"
                 />
               </FormControl>
               <FormMessage />
@@ -100,16 +130,16 @@ export default function RegisterForm() {
                   placeholder="8+ characters"
                   type="password"
                   {...field}
-                  className="text-gray-600 focus:border-[#0D99FF] focus:ring-[#0D99FF] "
+                  className="text-gray-600 focus:border-[#0D99FF] focus:ring-[#0D99FF]"
                 />
               </FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
+
         <FormItem>
           <FormLabel className="text-gray-500">Dịch vụ</FormLabel>
-
           <MultiSelect
             options={servicesList}
             onValueChange={setSelectedServices}
@@ -122,10 +152,11 @@ export default function RegisterForm() {
             className="w-full text-gray-600 bg-white border border-gray-300 rounded-md focus:border-[#0D99FF] focus:ring-[#0D99FF] focus:ring-1 focus:outline-none p-2"
           />
         </FormItem>
+
         <Button
           type="submit"
           className="!mt-8 w-full bg-[#0D99FF] transition-colors duration-300 ease-in-out hover:bg-[#0d9affc7]"
-          onClick={() => router.push("/login")}
+          disabled={isLoading}
         >
           {!isLoading ? (
             "Đăng ký"
