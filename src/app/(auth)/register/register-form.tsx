@@ -41,6 +41,7 @@ export default function RegisterForm() {
 
   function onSubmit(values: RegisterBodyType) {
     setIsLoading(!isLoading);
+    console.log(selectedServices);
     console.log(values);
   }
 
@@ -113,9 +114,10 @@ export default function RegisterForm() {
             options={servicesList}
             onValueChange={setSelectedServices}
             defaultValue={selectedServices}
+            modalPopover={isLoading}
             placeholder="Select services"
             variant="secondary"
-            animation={2}
+            animation={5}
             maxCount={5}
             className="w-full text-gray-600 bg-white border border-gray-300 rounded-md focus:border-[#0D99FF] focus:ring-[#0D99FF] focus:ring-1 focus:outline-none p-2"
           />

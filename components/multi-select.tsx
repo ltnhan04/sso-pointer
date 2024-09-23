@@ -275,7 +275,7 @@ export const MultiSelect = React.forwardRef<
               </div>
             ) : (
               <div className=" w-full">
-                <div className="flex items-center">
+                <div className="flex items-center justify-between">
                   <span className="text-sm text-gray-500 mx-3">
                     {placeholder}
                   </span>
