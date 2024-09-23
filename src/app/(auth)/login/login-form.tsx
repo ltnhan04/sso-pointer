@@ -5,13 +5,6 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ReloadIcon } from "@radix-ui/react-icons";
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import {
   Form,
   FormControl,
   FormField,
@@ -19,28 +12,50 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import {
-  RegisterBody,
-  RegisterBodyType,
-} from "@/schemaValidations/auth.schema";
+import { LoginBody, LoginBodyType } from "@/schemaValidations/auth.schema";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-
+import { useMutation } from "@tanstack/react-query";
+import { loginAPI } from "@/app/api/auth/auth";
 export default function LoginForm() {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
-  const form = useForm<RegisterBodyType>({
-    resolver: zodResolver(RegisterBody),
+  const [error, setError] = useState<string>("");
+  const form = useForm<LoginBodyType>({
+    resolver: zodResolver(LoginBody),
     defaultValues: {
       email: "",
       password: "",
-      confirmPassword: "",
+    },
+  });
+  const { mutate } = useMutation({
+    mutationFn: async ({
+      email,
+      password,
+    }: {
+      email: string;
+      password: string;
+    }) => {
+      setIsLoading(true);
+      return await loginAPI({
+        email,
+        password,
+      });
+    },
+    onError: (error: unknown) => {
+      console.error(error);
+      setError("Tài khoản hoặc mật khẩu sai");
+      setIsLoading(false);
+    },
+    onSuccess: ({ data }) => {
+      console.log(data);
+      setIsLoading(false);
+      router.push("/");
     },
   });
 
-  function onSubmit(values: RegisterBodyType) {
-    setIsLoading(!isLoading);
-    console.log(values);
+  async function onSubmit(values: LoginBodyType) {
+    mutate({ email: values.email, password: values.password });
   }
 
   return (
@@ -60,6 +75,7 @@ export default function LoginForm() {
                   placeholder="example@gmail.com"
                   type="email"
                   {...field}
+                  {...form.register("email")}
                   className="focus:border-[#0D99FF] focus:ring-[#0D99FF] text-gray-600"
                 />
               </FormControl>
@@ -79,35 +95,18 @@ export default function LoginForm() {
                   placeholder="8+ characters"
                   type="password"
                   {...field}
-                  className=" focus:border-[#0D99FF] focus:ring-[#0D99FF] text-gray-600"
+                  {...form.register("password")}
+                  className="focus:border-[#0D99FF] focus:ring-[#0D99FF] text-gray-600"
                 />
               </FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
-
-        <FormItem>
-          <FormLabel className="text-gray-500">Dịch vụ</FormLabel>
-          <Select>
-            <SelectTrigger
-              className="w-full text-gray-600 bg-white border border-gray-300
-          rounded-md focus:border-[#0D99FF] focus:ring-[#0D99FF] focus:ring-1
-          focus:outline-none p-2"
-            >
-              <SelectValue placeholder="Theme" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="light">Light</SelectItem>
-              <SelectItem value="dark">Dark</SelectItem>
-              <SelectItem value="system">System</SelectItem>
-            </SelectContent>
-          </Select>
-        </FormItem>
+        {error && <h1 className="text-center text-sm text-red-500">{error}</h1>}
         <Button
           type="submit"
           className="!mt-8 w-full bg-[#0D99FF] transition-colors duration-300 ease-in-out hover:bg-[#0d9affc7]"
-          onClick={() => router.push("/login")}
         >
           {!isLoading ? (
             "Đăng nhập"
