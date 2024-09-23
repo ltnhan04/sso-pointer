@@ -7,7 +7,6 @@ export default function RegisterPage() {
       <div className="max-w-4xl w-full mx-auto p-8 md:p-12 bg-white border-gray-300 rounded-xl shadow-xl">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
           <HeroSection />
-
           <div>
             <h1 className="text-2xl font-bold text-center text-[#0D99FF] mb-4">
               Đăng ký

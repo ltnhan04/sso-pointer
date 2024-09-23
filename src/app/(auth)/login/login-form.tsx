@@ -15,11 +15,12 @@ import {
 import { LoginBody, LoginBodyType } from "@/schemaValidations/auth.schema";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import axios from "axios";
 import { useMutation } from "@tanstack/react-query";
+import { loginAPI } from "@/app/api/auth/auth";
 export default function LoginForm() {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string>("");
   const form = useForm<LoginBodyType>({
     resolver: zodResolver(LoginBody),
     defaultValues: {
@@ -27,49 +28,34 @@ export default function LoginForm() {
       password: "",
     },
   });
-  // const { mutate } = useMutation({
-  //   mutationFn: async ({
-  //     email,
-  //     password,
-  //   }: {
-  //     email: string;
-  //     password: string;
-  //   }) => {
-  //     console.log(email, password);
-  //     await axios.post("https://oauth.pointer.io.vn/auth/sign-in", {
-  //       data: { email, password },
-  //     });
-  //   },
-  //   onError: (error: any) => {
-  //     console.error("Error:", error);
-  //   },
-  //   onSuccess: () => {
-  //     console.log("Đăng nhập thành công");
-  //     router.push(""); // Thay thế bằng route bạn muốn điều hướng
-  //   },
-  // });
+  const { mutate } = useMutation({
+    mutationFn: async ({
+      email,
+      password,
+    }: {
+      email: string;
+      password: string;
+    }) => {
+      setIsLoading(true);
+      return await loginAPI({
+        email,
+        password,
+      });
+    },
+    onError: (error: unknown) => {
+      console.error(error);
+      setError("Tài khoản hoặc mật khẩu sai");
+      setIsLoading(false);
+    },
+    onSuccess: ({ data }) => {
+      console.log(data);
+      setIsLoading(false);
+      router.push("/");
+    },
+  });
 
   async function onSubmit(values: LoginBodyType) {
-    console.log(values);
-    // await mutate({ email: values.email, password: values.password });
-    try {
-      const response = await axios.post(
-        "https://sso-pointer-three.vercel.app/auth/sign-in",
-        {
-          email: values.email,
-          password: values.password,
-        },
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
-      console.log(response.data);
-      console.log("ok");
-    } catch (error: any) {
-      console.log(error.response);
-    }
+    mutate({ email: values.email, password: values.password });
   }
 
   return (
@@ -78,7 +64,6 @@ export default function LoginForm() {
         onSubmit={form.handleSubmit(onSubmit)}
         className="space-y-2 max-w-[600px] flex-shrink-0 w-full"
       >
-        {/* Field Email */}
         <FormField
           control={form.control}
           name="email"
@@ -99,7 +84,6 @@ export default function LoginForm() {
           )}
         />
 
-        {/* Field Password */}
         <FormField
           control={form.control}
           name="password"
@@ -119,7 +103,7 @@ export default function LoginForm() {
             </FormItem>
           )}
         />
-
+        {error && <h1 className="text-center text-sm text-red-500">{error}</h1>}
         <Button
           type="submit"
           className="!mt-8 w-full bg-[#0D99FF] transition-colors duration-300 ease-in-out hover:bg-[#0d9affc7]"
