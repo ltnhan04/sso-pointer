@@ -53,10 +53,18 @@ export default function LoginForm() {
     console.log(values);
     // await mutate({ email: values.email, password: values.password });
     try {
-      const response = await axios.post("http://localhost:8888/auth/sign-in", {
-        email: values.email,
-        password: values.password,
-      });
+      const response = await axios.post(
+        "https://sso-pointer-three.vercel.app/auth/sign-in",
+        {
+          email: values.email,
+          password: values.password,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
       console.log(response.data);
       console.log("ok");
     } catch (error: any) {
