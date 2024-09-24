@@ -39,7 +39,6 @@ const Index = () => {
       return rs.data;
     },
     onSuccess: (data: unknown) => {
-      console.log(data);
       window.location.replace(`${dataR.callBackUrl}?code=${data?.code}`);
     },
   });
