@@ -52,7 +52,9 @@ export default function RegisterForm() {
         password,
       });
     },
-    onSuccess: (response) => {
+    onSuccess: (response, variables) => {
+      const { email } = variables;
+
       const messageText: string =
         typeof response.data.message === "string"
           ? response.data.message
@@ -79,7 +81,8 @@ export default function RegisterForm() {
         ),
       });
 
-      localStorage.setItem("email", response.data.email);
+      localStorage.setItem("email", email);
+
       router.push("/register/verify");
       setIsLoading(false);
     },
