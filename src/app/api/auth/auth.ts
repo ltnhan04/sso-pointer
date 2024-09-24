@@ -52,7 +52,6 @@ interface IAuthorize {
   scope: string;
 }
 export const authorizeAPI = async (body: IAuthorize) => {
-  console.log(body);
   return await axios.post(
     `${process.env.NEXT_PUBLIC_API_ENDPOINT}/auth/authorize`,
     body,
