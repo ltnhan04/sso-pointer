@@ -20,7 +20,7 @@ interface IVerify {
 }
 export const verifyAccount = async (body: IVerify) => {
   return await axios.post(
-    `${process.env.NEXT_PUBLIC_API_ENDPOINT}/auth/sign-up/verify`,
+    `${process.env.NEXT_PUBLIC_API_ENDPOINT}/auth/verify/sign-up`,
     body
   );
 };

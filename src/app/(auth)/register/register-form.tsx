@@ -20,21 +20,13 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useMutation } from "@tanstack/react-query";
 import { useToast } from "@/hooks/use-toast";
-import { MultiSelect } from "../../../../components/multi-select";
 import { registerAPI } from "@/app/api/auth/auth";
 import { ToastAction } from "@radix-ui/react-toast";
-
-const servicesList = [
-  { value: "traveloki", label: "Traveloki" },
-  { value: "emart", label: "Emart" },
-  { value: "oggefood", label: "OggeFood" },
-  { value: "globetrek", label: "GlobeTrek" },
-];
 
 interface ErrorResponse {
   response: {
     data: {
-      message: string;
+      message: { message: string; error: string; statusCode: number };
     };
   };
 }
@@ -42,7 +34,6 @@ interface ErrorResponse {
 export default function RegisterForm() {
   const { toast } = useToast();
   const router = useRouter();
-  const [selectedServices, setSelectedServices] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(false);
 
   const { mutate } = useMutation({
@@ -62,6 +53,10 @@ export default function RegisterForm() {
           email,
           password,
         });
+        const messageText: string =
+          typeof response.data.message === "string"
+            ? response.data.message
+            : response.data.message.message;
         if (response.status === 201) {
           toast({
             className: `
@@ -79,27 +74,25 @@ export default function RegisterForm() {
             description: (
               <span className="flex items-center gap-2">
                 <ReloadIcon className="w-4 h-4 text-white" />
-                {response.data.message}
+                {messageText}
               </span>
             ),
           });
-
-          setTimeout(() => {
-            router.push("/register/verify");
-          }, 2000);
+          localStorage.setItem("email", email);
+          router.push("/register/verify");
         }
       } finally {
         setIsLoading(false);
       }
     },
     onError: (error: unknown) => {
-      const typedError = error as ErrorResponse;
-      const errorMsg = typedError?.response?.data?.message || "Đã xảy ra lỗi!";
+      const errorMsg = (error as ErrorResponse)?.response?.data?.message;
+      const { message } = errorMsg;
 
       toast({
         variant: "destructive",
-        title: "Lỗi!",
-        description: errorMsg,
+        title: errorMsg.error + " " + errorMsg.statusCode,
+        description: message,
         action: <ToastAction altText="Thử lại">Thử lại!</ToastAction>,
       });
 
@@ -207,21 +200,6 @@ export default function RegisterForm() {
             </FormItem>
           )}
         />
-
-        <FormItem>
-          <FormLabel className="text-gray-500">Dịch vụ</FormLabel>
-          <MultiSelect
-            options={servicesList}
-            onValueChange={setSelectedServices}
-            defaultValue={selectedServices}
-            modalPopover={isLoading}
-            placeholder="Select services"
-            variant="secondary"
-            animation={5}
-            maxCount={5}
-            className="w-full text-gray-600 bg-white border border-gray-300 rounded-md focus:border-[#0D99FF] focus:ring-[#0D99FF] focus:ring-1 focus:outline-none p-2"
-          />
-        </FormItem>
 
         <Button
           type="submit"
