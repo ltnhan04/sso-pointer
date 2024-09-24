@@ -15,6 +15,7 @@ export default function VerifyPage() {
                 alt="2-factor"
                 width={150}
                 height={150}
+                priority={false}
                 className="md:w-[120px] w-[100px]"
               />
             </div>

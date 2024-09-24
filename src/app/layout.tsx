@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import { Roboto } from "next/font/google";
+import { Toaster } from "@/components/ui/toaster";
+
 import Providers from "../../components/providers";
 import "./globals.css";
 const roboto = Roboto({
@@ -20,6 +22,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${roboto.className} bg-white`}>
+        <Toaster />
         <Providers>{children}</Providers>
       </body>
     </html>
