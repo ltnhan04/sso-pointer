@@ -38,7 +38,7 @@ const Index = () => {
       const rs = await authorizeAPI(body);
       return rs.data;
     },
-    onSuccess: (data: unknown) => {
+    onSuccess: (data: { code: string }) => {
       window.location.replace(`${dataR.callBackUrl}?code=${data?.code}`);
     },
   });
