@@ -46,44 +46,42 @@ export default function RegisterForm() {
       email: string;
       password: string;
     }) => {
-      try {
-        setIsLoading(true);
-        const response = await registerAPI({
-          name,
-          email,
-          password,
-        });
-        const messageText: string =
-          typeof response.data.message === "string"
-            ? response.data.message
-            : response.data.message.message;
-        if (response.status === 201) {
-          toast({
-            className: `
-              bg-[#0d9aff85] 
-              text-white 
-              border border-[#0B85DC] 
-              rounded-lg 
-              shadow-lg 
-              p-4 
-              flex items-center
-              transition-all 
-              duration-300 
-              ease-in-out
-            `,
-            description: (
-              <span className="flex items-center gap-2">
-                <ReloadIcon className="w-4 h-4 text-white" />
-                {messageText}
-              </span>
-            ),
-          });
-          localStorage.setItem("email", email);
-          router.push("/register/verify");
-        }
-      } finally {
-        setIsLoading(false);
-      }
+      return await registerAPI({
+        name,
+        email,
+        password,
+      });
+    },
+    onSuccess: (response) => {
+      const messageText: string =
+        typeof response.data.message === "string"
+          ? response.data.message
+          : response.data.message.message;
+
+      toast({
+        className: `
+          bg-[#0D99FF] 
+          text-white    
+          border border-[#0B85DC] 
+          rounded-lg 
+          shadow-lg 
+          p-4 
+          flex items-center
+          transition-all 
+          duration-300 
+          ease-in-out
+        `,
+        description: (
+          <span className="flex items-center gap-2">
+            <ReloadIcon className="w-4 h-4 text-white" />
+            {messageText}
+          </span>
+        ),
+      });
+
+      localStorage.setItem("email", response.data.email);
+      router.push("/register/verify");
+      setIsLoading(false);
     },
     onError: (error: unknown) => {
       const errorMsg = (error as ErrorResponse)?.response?.data?.message;
@@ -93,7 +91,7 @@ export default function RegisterForm() {
         variant: "destructive",
         title: errorMsg.error + " " + errorMsg.statusCode,
         description: message,
-        action: <ToastAction altText="Thử lại">Thử lại!</ToastAction>,
+        action: <ToastAction altText="Try again">Try Again!</ToastAction>,
       });
 
       setIsLoading(false);
@@ -113,6 +111,7 @@ export default function RegisterForm() {
   async function onSubmit(values: RegisterBodyType) {
     const { username, password, email } = values;
 
+    setIsLoading(true);
     mutate({
       name: username,
       email: email,
