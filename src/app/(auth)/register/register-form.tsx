@@ -16,10 +16,14 @@ import {
   RegisterBody,
   RegisterBodyType,
 } from "@/schemaValidations/auth.schema";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { useMutation } from "@tanstack/react-query";
+import { useToast } from "@/hooks/use-toast";
 import { MultiSelect } from "../../../../components/multi-select";
 import { registerAPI } from "@/app/api/auth/auth";
+import { ToastAction } from "@radix-ui/react-toast";
+
 const servicesList = [
   { value: "traveloki", label: "Traveloki" },
   { value: "emart", label: "Emart" },
@@ -27,11 +31,82 @@ const servicesList = [
   { value: "globetrek", label: "GlobeTrek" },
 ];
 
+interface ErrorResponse {
+  response: {
+    data: {
+      message: string;
+    };
+  };
+}
+
 export default function RegisterForm() {
-  useEffect(() => {}, []);
+  const { toast } = useToast();
   const router = useRouter();
   const [selectedServices, setSelectedServices] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+
+  const { mutate } = useMutation({
+    mutationFn: async ({
+      name,
+      email,
+      password,
+    }: {
+      name: string;
+      email: string;
+      password: string;
+    }) => {
+      try {
+        setIsLoading(true);
+        const response = await registerAPI({
+          name,
+          email,
+          password,
+        });
+        if (response.status === 201) {
+          toast({
+            className: `
+              bg-[#0d9aff85] 
+              text-white 
+              border border-[#0B85DC] 
+              rounded-lg 
+              shadow-lg 
+              p-4 
+              flex items-center
+              transition-all 
+              duration-300 
+              ease-in-out
+            `,
+            description: (
+              <span className="flex items-center gap-2">
+                <ReloadIcon className="w-4 h-4 text-white" />
+                {response.data.message}
+              </span>
+            ),
+          });
+
+          setTimeout(() => {
+            router.push("/register/verify");
+          }, 2000);
+        }
+      } finally {
+        setIsLoading(false);
+      }
+    },
+    onError: (error: unknown) => {
+      const typedError = error as ErrorResponse;
+      const errorMsg = typedError?.response?.data?.message || "Đã xảy ra lỗi!";
+
+      toast({
+        variant: "destructive",
+        title: "Lỗi!",
+        description: errorMsg,
+        action: <ToastAction altText="Thử lại">Thử lại!</ToastAction>,
+      });
+
+      setIsLoading(false);
+    },
+  });
+
   const form = useForm<RegisterBodyType>({
     resolver: zodResolver(RegisterBody),
     defaultValues: {
@@ -44,17 +119,12 @@ export default function RegisterForm() {
 
   async function onSubmit(values: RegisterBodyType) {
     const { username, password, email } = values;
-    setIsLoading(true);
-    try {
-      const res = await registerAPI({ name: username, password, email });
-      if (res.status === 200) {
-        router.push("/verify");
-      }
-    } catch (error) {
-      console.log(error);
-    } finally {
-      setIsLoading(false);
-    }
+
+    mutate({
+      name: username,
+      email: email,
+      password: password,
+    });
   }
 
   return (
@@ -73,7 +143,7 @@ export default function RegisterForm() {
                 <Input
                   placeholder="Nhập tên đăng nhập"
                   {...field}
-                  className="focus:border-[#0D99FF] focus:ring-[#0D99FF] text-gray-600"
+                  className="focus:outline-2 focus:outline-offset-2 focus:outline-[#0D99FF] text-gray-600 focus:border-[#0D99FF]"
                 />
               </FormControl>
               <FormMessage />
@@ -92,7 +162,7 @@ export default function RegisterForm() {
                   placeholder="example@gmail.com"
                   type="email"
                   {...field}
-                  className="focus:border-[#0D99FF] focus:ring-[#0D99FF] text-gray-600"
+                  className="focus:outline-2 focus:outline-offset-2 focus:outline-[#0D99FF] text-gray-600 focus:border-[#0D99FF]"
                 />
               </FormControl>
               <FormMessage />
@@ -111,7 +181,7 @@ export default function RegisterForm() {
                   placeholder="8+ characters"
                   type="password"
                   {...field}
-                  className="focus:border-[#0D99FF] focus:ring-[#0D99FF] text-gray-600"
+                  className="focus:outline-2 focus:outline-offset-2 focus:outline-[#0D99FF] text-gray-600 focus:border-[#0D99FF]"
                 />
               </FormControl>
               <FormMessage />
@@ -130,7 +200,7 @@ export default function RegisterForm() {
                   placeholder="8+ characters"
                   type="password"
                   {...field}
-                  className="text-gray-600 focus:border-[#0D99FF] focus:ring-[#0D99FF]"
+                  className="focus:outline-2 focus:outline-offset-2 focus:outline-[#0D99FF] text-gray-600 focus:border-[#0D99FF]"
                 />
               </FormControl>
               <FormMessage />
