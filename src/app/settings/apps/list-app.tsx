@@ -1,4 +1,4 @@
-import { getApps } from "@/app/api/auth/app";
+import { getApps } from "@/app/api/app/app";
 import { CustomCard } from "@/components/ui/card";
 import { useQuery } from "@tanstack/react-query";
 import React from "react";
