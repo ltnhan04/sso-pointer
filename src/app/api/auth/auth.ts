@@ -34,3 +34,37 @@ export const loginAPI = async (body: ILogin) => {
     body
   );
 };
+const token =
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2ZjE4ZjdjMmMyOThkYTAyZTg1N2Q4NSIsImlhdCI6MTcyNzE3Njk0MSwiZXhwIjoxNzI3MTc3ODQxfQ.Kas-6cN3cI1E2bU0ORC6Sn7s3QlFz_G_duAxMv0V-G8";
+export const getProfile = async () => {
+  return await axios.get(
+    `${process.env.NEXT_PUBLIC_API_ENDPOINT}/user/profile`,
+    {
+      headers: {
+        Authorization: "Bearer " + token,
+      },
+    }
+  );
+};
+interface IAuthorize {
+  clientId: string;
+  redirectUri: string;
+  scope: string;
+}
+export const authorizeAPI = async (body: IAuthorize) => {
+  console.log(body);
+  return await axios.post(
+    `${process.env.NEXT_PUBLIC_API_ENDPOINT}/auth/authorize`,
+    body,
+    {
+      headers: {
+        Authorization: "Bearer " + token,
+      },
+    }
+  );
+};
+export const getOAuthApp = async (id: string) => {
+  return await axios.get(
+    `${process.env.NEXT_PUBLIC_API_ENDPOINT}/auth/oauth-app/${id}`
+  );
+};
