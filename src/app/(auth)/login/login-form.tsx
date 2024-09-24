@@ -3,7 +3,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { ReloadIcon } from "@radix-ui/react-icons";
+import { ReloadIcon, CheckCircledIcon } from "@radix-ui/react-icons";
 import {
   Form,
   FormControl,
@@ -13,14 +13,26 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { LoginBody, LoginBodyType } from "@/schemaValidations/auth.schema";
+import { loginAPI } from "@/app/api/auth/auth";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useMutation } from "@tanstack/react-query";
-import { loginAPI } from "@/app/api/auth/auth";
+import { useToast } from "@/hooks/use-toast";
+import { ToastAction } from "@radix-ui/react-toast";
+import { setCookie } from "cookies-next";
+
+interface ErrorResponse {
+  response: {
+    data: {
+      message: { message: string; error: string; statusCode: number };
+    };
+  };
+}
+
 export default function LoginForm() {
   const router = useRouter();
+  const { toast } = useToast();
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<string>("");
   const form = useForm<LoginBodyType>({
     resolver: zodResolver(LoginBody),
     defaultValues: {
@@ -28,6 +40,7 @@ export default function LoginForm() {
       password: "",
     },
   });
+
   const { mutate } = useMutation({
     mutationFn: async ({
       email,
@@ -43,14 +56,47 @@ export default function LoginForm() {
       });
     },
     onError: (error: unknown) => {
-      console.error(error);
-      setError("Tài khoản hoặc mật khẩu sai");
+      const errorMsg = (error as ErrorResponse)?.response?.data?.message;
+      const { message } = errorMsg;
+
+      toast({
+        variant: "destructive",
+        title: errorMsg.error + " " + errorMsg.statusCode,
+        description: message,
+        action: <ToastAction altText="Try again">Try Again!</ToastAction>,
+      });
+
       setIsLoading(false);
     },
-    onSuccess: ({ data }) => {
-      console.log(data);
-      setIsLoading(false);
+    onSuccess: (response) => {
+      const { accessToken, refreshToken } = response.data;
+
+      setCookie("accessToken", accessToken, { maxAge: 60 * 15 });
+      setCookie("refreshToken", refreshToken, { maxAge: 60 * 60 * 24 * 15 });
+
+      toast({
+        className: `
+          bg-[#0D99FF] 
+          text-white    
+          border border-[#0B85DC] 
+          rounded-lg 
+          shadow-lg 
+          p-4 
+          flex items-center
+          transition-all 
+          duration-300 
+          ease-in-out
+        `,
+        description: (
+          <span className="flex items-center gap-2">
+            <CheckCircledIcon className="w-4 h-4 text-white" />
+            Đăng nhập thành công!
+          </span>
+        ),
+      });
+
       router.push("/");
+      setIsLoading(false);
     },
   });
 
@@ -103,7 +149,6 @@ export default function LoginForm() {
             </FormItem>
           )}
         />
-        {error && <h1 className="text-center text-sm text-red-500">{error}</h1>}
         <Button
           type="submit"
           className="!mt-8 w-full bg-[#0D99FF] transition-colors duration-300 ease-in-out hover:bg-[#0d9affc7]"

@@ -5,10 +5,14 @@ import { useSearchParams } from "next/navigation";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { authorizeAPI, getOAuthApp, getProfile } from "@/app/api/auth/auth";
 import { redirect } from "next/navigation";
+import Image from "next/image";
 interface IAuthorize {
   clientId: string;
   redirectUri: string;
   scope: string;
+}
+interface IAuthorizeResponse {
+  code: string;
 }
 const Index = () => {
   const searchParams = useSearchParams();
@@ -34,13 +38,13 @@ const Index = () => {
     retry: 0,
   });
   const { mutate } = useMutation({
-    mutationFn: async (body: IAuthorize) => {
+    mutationFn: async (body: IAuthorize): Promise<IAuthorizeResponse> => {
       const rs = await authorizeAPI(body);
       return rs.data;
     },
-    onSuccess: (data: unknown) => {
+    onSuccess: (data: IAuthorizeResponse) => {
       console.log(data);
-      window.location.replace(`${dataR.callBackUrl}?code=${data?.code}`);
+      window.location.replace(`${dataR.callBackUrl}?code=${data.code}`);
     },
   });
   if (isLoading || isLoadingR) {
@@ -63,8 +67,11 @@ const Index = () => {
     <div className="bg-gray-50 h-[100vh] pt-20">
       <div className="max-w-[500px] w-full mx-auto border  bg-white p-4 rounded-xl space-y-4">
         <div className="flex items-center">
-          <img
+          <Image
             className="w-10 h-10"
+            width={40}
+            height={40}
+            quality={100}
             src={"https://i.imgur.com/5cYzRrm.png"}
             alt="logo"
           />
