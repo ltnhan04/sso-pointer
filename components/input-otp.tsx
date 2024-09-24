@@ -11,7 +11,7 @@ import { useRouter } from "next/navigation";
 import { ToastAction } from "@radix-ui/react-toast";
 import { REGEXP_ONLY_DIGITS } from "input-otp";
 import { verifyAccount } from "@/app/api/auth/auth";
-import { ReloadIcon } from "@radix-ui/react-icons";
+import { CheckCircledIcon } from "@radix-ui/react-icons";
 import { setCookie } from "cookies-next";
 
 interface ErrorResponse {
@@ -40,11 +40,6 @@ export default function InputOTPPattern() {
       return await verifyAccount({ email, otp });
     },
     onSuccess: (response) => {
-      const messageText: string =
-        typeof response.data.message === "string"
-          ? response.data.message
-          : response.data.message.message;
-
       const { accessToken, refreshToken } = response.data;
 
       setCookie("accessToken", accessToken, { maxAge: 60 * 15 });
@@ -65,8 +60,8 @@ export default function InputOTPPattern() {
         `,
         description: (
           <span className="flex items-center gap-2">
-            <ReloadIcon className="w-4 h-4 text-white" />
-            {messageText}
+            <CheckCircledIcon className="w-4 h-4 text-white" />
+            Xác thực OTP thành công!
           </span>
         ),
       });

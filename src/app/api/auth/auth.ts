@@ -1,4 +1,6 @@
 import axios from "axios";
+import { getCookie } from "cookies-next";
+const token = getCookie("accessToken");
 
 export const registerAPI = async ({
   name,
@@ -34,8 +36,6 @@ export const loginAPI = async (body: ILogin) => {
     body
   );
 };
-const token =
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2ZjE4ZjdjMmMyOThkYTAyZTg1N2Q4NSIsImlhdCI6MTcyNzE3Njk0MSwiZXhwIjoxNzI3MTc3ODQxfQ.Kas-6cN3cI1E2bU0ORC6Sn7s3QlFz_G_duAxMv0V-G8";
 export const getProfile = async () => {
   return await axios.get(
     `${process.env.NEXT_PUBLIC_API_ENDPOINT}/user/profile`,
