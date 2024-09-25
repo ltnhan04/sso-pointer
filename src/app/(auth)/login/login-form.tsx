@@ -20,7 +20,6 @@ import { useMutation } from "@tanstack/react-query";
 import { useToast } from "@/hooks/use-toast";
 import { ToastAction } from "@radix-ui/react-toast";
 import { setCookie } from "cookies-next";
-
 interface ErrorResponse {
   response: {
     data: {
