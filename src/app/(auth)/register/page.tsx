@@ -14,8 +14,14 @@ export default function RegisterPage() {
             <p className="text-center text-gray-600 font-medium mb-6">
               Tạo tài khoản của bạn ngay hôm nay!
             </p>
-            <div className="flex justify-center">
+            <div className="">
               <RegisterForm />
+              <h1 className="text-sm text-center mt-5 font-semibold">
+                Bạn đã có tài khoản?
+                <a className="text-blue-500 pl-2" href="/login">
+                  Đăng nhập
+                </a>
+              </h1>
             </div>
           </div>
         </div>

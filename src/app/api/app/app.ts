@@ -41,3 +41,18 @@ export const getDetails = async (id: string) => {
   );
   return res.data;
 };
+export const generateClientSecretAPI = async (clientId: string) => {
+  console.log({ clientId });
+  const res = await axios.post(
+    `${process.env.NEXT_PUBLIC_API_ENDPOINT}/auth/generate-client-secret`,
+    {
+      clientId: clientId,
+    },
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+  return res.data;
+};

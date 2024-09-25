@@ -17,8 +17,14 @@ export default function LoginPage() {
             <p className="text-center text-gray-600 font-medium mb-6">
               Welcome back!
             </p>
-            <div className="flex justify-center">
+            <div className="">
               <LoginForm />
+              <h1 className="text-sm text-center mt-5 font-semibold">
+                Bạn chưa có tài khoản? 
+                <a className="text-blue-500 pl-2" href="/register">
+                  Đăng ký{" "}
+                </a>
+              </h1>
             </div>
           </div>
         </div>
