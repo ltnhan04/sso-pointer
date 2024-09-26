@@ -3,6 +3,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import React from "react";
 import { getApps } from "@/app/api/app/app";
 import { CustomCard } from "./custom-card";
+import { ReloadIcon } from "@radix-ui/react-icons";
 
 interface ICard {
   image?: string;
@@ -20,19 +21,8 @@ const ListApp = () => {
   });
   if (isLoading) {
     return (
-      <div className="flex flex-wrap justify-center gap-4 mt-4">
-        {[...Array(4)].map((_, index) => (
-          <div
-            key={index}
-            className="max-w-sm w-full bg-white rounded-lg shadow-md overflow-hidden flex items-center border p-4"
-          >
-            <Skeleton className="h-14 w-14 rounded-full object-cover" />
-            <div className="ml-4 flex-1">
-              <Skeleton className="h-4 w-3/4 rounded-lg" />
-              <Skeleton className="mt-2 h-4 w-1/2 rounded-lg" />
-            </div>
-          </div>
-        ))}
+      <div className="flex items-center justify-center">
+        <ReloadIcon className="animate-spin h-8 w-8 text-[#0D99FF]" />
       </div>
     );
   }
