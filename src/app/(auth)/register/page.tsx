@@ -16,7 +16,7 @@ export default function RegisterPage() {
             </p>
             <div className="">
               <RegisterForm />
-              <h1 className="text-sm text-center mt-5 font-semibold">
+              <h1 className="text-sm text-center mt-5 font-semibold text-gray-500">
                 Bạn đã có tài khoản?
                 <a className="text-blue-500 pl-2" href="/login">
                   Đăng nhập
