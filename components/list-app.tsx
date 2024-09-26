@@ -1,5 +1,4 @@
 import { useQuery } from "@tanstack/react-query";
-import { Skeleton } from "@/components/ui/skeleton";
 import React from "react";
 import { getApps } from "@/app/api/app/app";
 import { CustomCard } from "./custom-card";
