@@ -1,81 +1,38 @@
 "use client";
 import React from "react";
-import { Button } from "@/components/ui/button";
 import { useSearchParams } from "next/navigation";
-import { useMutation, useQuery } from "@tanstack/react-query";
-import { authorizeAPI, getOAuthApp, getProfile } from "@/app/api/auth/auth";
+import { useQuery } from "@tanstack/react-query";
+import { authorizeAPI } from "@/app/api/auth/auth";
 import { useRouter } from "next/navigation";
-import Image from "next/image";
-
-interface IAuthorize {
-  clientId: string;
-  redirectUri: string;
-  scope: string;
-}
-
-interface IAuthorizeResponse {
-  code: string;
-}
-
 const Index = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const clientId = searchParams.get("clientId") || " ";
-  const { data, isLoading, isError } = useQuery({
-    queryKey: ["user-profile"],
+  const callbackUrl = searchParams.get("callbackUrl") || " ";
+  const { data, isLoading, isError, isSuccess } = useQuery({
+    queryKey: ["authorize"],
     queryFn: async () => {
-      const rs = await getProfile();
+      console.log("ok");
+
+      const rs = await authorizeAPI();
+      console.log(rs);
       return rs.data;
     },
     retry: 0,
   });
 
-  const {
-    data: dataR,
-    isLoading: isLoadingR,
-    isError: isErrorR,
-  } = useQuery({
-    queryKey: ["oauth-profile"],
-    queryFn: async () => {
-      const rs = await getOAuthApp(clientId);
-      return rs.data;
-    },
-    retry: 0,
-  });
-
-  const { mutate } = useMutation({
-    mutationFn: async (body: IAuthorize): Promise<IAuthorizeResponse> => {
-      const rs = await authorizeAPI(body);
-      return rs.data;
-    },
-    onSuccess: (data: IAuthorizeResponse) => {
-      window.location.replace(`${dataR.callBackUrl}?code=${data.code}`);
-    },
-  });
-
-  if (isLoading || isLoadingR) {
+  if (isLoading) {
     return <h1>Loading...</h1>;
   }
-
+  if (isSuccess) {
+    window.location.replace(`${callbackUrl}?code=${data.code}`);
+  }
   if (isError) {
-    router.push("/login?clientId=123123");
+    router.push(`/login?callbackUrl=${callbackUrl}`);
   }
-
-  if (isErrorR) {
-    return <h1>Client ID not found</h1>;
-  }
-
-  const handleAccept = () => {
-    mutate({
-      clientId: clientId,
-      redirectUri: "",
-      scope: "user",
-    });
-  };
-
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100 p-4">
-      <div className="max-w-lg w-full bg-white p-6 rounded-lg shadow-lg">
+      <h1 className="text-center">In progress</h1>
+      {/* <div className="max-w-lg w-full bg-white p-6 rounded-lg shadow-lg">
         <div className="flex items-center justify-center mb-6">
           <Image
             className="w-12 h-12"
@@ -126,7 +83,7 @@ const Index = () => {
             Tiếp tục
           </Button>
         </div>
-      </div>
+      </div> */}
     </div>
   );
 };
