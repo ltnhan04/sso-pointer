@@ -46,24 +46,16 @@ export const getProfile = async () => {
     }
   );
 };
-interface IAuthorize {
-  clientId: string;
-  redirectUri: string;
-  scope: string;
-}
-export const authorizeAPI = async (body: IAuthorize) => {
+
+export const authorizeAPI = async () => {
+  console.log(token);
   return await axios.post(
     `${process.env.NEXT_PUBLIC_API_ENDPOINT}/auth/authorize`,
-    body,
+    {},
     {
       headers: {
-        Authorization: "Bearer " + token,
+        Authorization: `Bearer ${token}`,
       },
     }
-  );
-};
-export const getOAuthApp = async (id: string) => {
-  return await axios.get(
-    `${process.env.NEXT_PUBLIC_API_ENDPOINT}/auth/oauth-app/${id}`
   );
 };
