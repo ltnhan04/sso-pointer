@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import Image from "next/image";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useRouter } from "next/navigation";
 
 interface CustomCardProps {
@@ -11,21 +11,18 @@ interface CustomCardProps {
 export function CustomCard({ image, _id, applicationName }: CustomCardProps) {
   const router = useRouter();
   return (
-    <div className="max-w-sm my-2 bg-white rounded-lg  overflow-hidden flex items-center border shadow-lg ">
+    <div className=" max-w-sm my-2 bg-white rounded-lg  overflow-hidden flex items-center border shadow-lg ">
       <div className="flex items-center gap-4 px-3 py-2">
-        <div className="h-14 w-14 rounded-full overflow-hidden">
-          <Image
-            className="object-cover"
-            width={56}
-            height={56}
+        <Avatar>
+          <AvatarImage
             src={
-              image !== undefined
+              image != undefined
                 ? image
-                : "https://avatars.githubusercontent.com/u/20935242?s=80&v=4"
+                : `https://avatars.githubusercontent.com/u/20935242?s=80&v=4`
             }
-            alt="Logo App"
           />
-        </div>
+          <AvatarFallback>Partner</AvatarFallback>
+        </Avatar>
 
         <div className="pl-2">
           <h2 className="text-xl font-semibold text-primary">

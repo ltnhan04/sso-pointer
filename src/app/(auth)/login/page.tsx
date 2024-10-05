@@ -19,8 +19,8 @@ export default function LoginPage() {
             </p>
             <div className="">
               <LoginForm />
-              <h1 className="text-sm text-center mt-5 font-semibold">
-                Bạn chưa có tài khoản? 
+              <h1 className="text-sm text-center mt-5 font-semibold text-gray-500">
+                Bạn chưa có tài khoản?
                 <a className="text-blue-500 pl-2" href="/register">
                   Đăng ký{" "}
                 </a>
