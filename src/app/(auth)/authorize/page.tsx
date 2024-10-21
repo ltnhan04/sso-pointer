@@ -4,6 +4,7 @@ import { useSearchParams } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 import { authorizeAPI } from "@/app/api/auth/auth";
 import { useRouter } from "next/navigation";
+import { getCookie } from "cookies-next";
 const Index = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -11,10 +12,8 @@ const Index = () => {
   const { data, isLoading, isError, isSuccess } = useQuery({
     queryKey: ["authorize"],
     queryFn: async () => {
-      console.log("ok");
-
-      const rs = await authorizeAPI();
-      console.log(rs);
+      const token = getCookie("accessToken") || "";
+      const rs = await authorizeAPI(token);
       return rs.data;
     },
     retry: 0,
@@ -24,9 +23,11 @@ const Index = () => {
     return <h1>Loading...</h1>;
   }
   if (isSuccess) {
+    console.log(callbackUrl);
     window.location.replace(`${callbackUrl}?code=${data.code}`);
   }
   if (isError) {
+    console.log(isError);
     router.push(`/login?callbackUrl=${callbackUrl}`);
   }
   return (

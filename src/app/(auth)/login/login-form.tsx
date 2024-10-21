@@ -15,7 +15,7 @@ import {
 import { LoginBody, LoginBodyType } from "@/schemaValidations/auth.schema";
 import { loginAPI } from "@/app/api/auth/auth";
 import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useMutation } from "@tanstack/react-query";
 import { useToast } from "@/hooks/use-toast";
 import { ToastAction } from "@radix-ui/react-toast";
@@ -29,6 +29,8 @@ interface ErrorResponse {
 }
 
 export default function LoginForm() {
+  const searchParams = useSearchParams();
+  const callbackUrl = searchParams.get("callbackUrl") || " ";
   const router = useRouter();
   const { toast } = useToast();
   const [isLoading, setIsLoading] = useState(false);
@@ -93,8 +95,12 @@ export default function LoginForm() {
           </span>
         ),
       });
-
+      if (callbackUrl) {
+        router.push(`/authorize?callbackUrl=${callbackUrl}`);
+        return;
+      }
       router.push("/");
+
       setIsLoading(false);
     },
   });
