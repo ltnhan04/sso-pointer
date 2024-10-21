@@ -47,14 +47,14 @@ export const getProfile = async () => {
   );
 };
 
-export const authorizeAPI = async () => {
-  console.log(token);
+export const authorizeAPI = async (accessToken: string) => {
+  console.log(accessToken);
   return await axios.post(
     `${process.env.NEXT_PUBLIC_API_ENDPOINT}/auth/authorize`,
     {},
     {
       headers: {
-        Authorization: `Bearer ${token}`,
+        Authorization: `Bearer ${accessToken}`,
       },
     }
   );
