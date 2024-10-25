@@ -136,6 +136,7 @@ export default function RegisterForm() {
               <FormLabel className="text-gray-500">Tên đăng nhập</FormLabel>
               <FormControl>
                 <Input
+                  disabled={isLoading}
                   placeholder="Nhập tên đăng nhập"
                   {...field}
                   className="focus:outline-2 focus:outline-offset-2 focus:outline-[#0D99FF] text-gray-600 focus:border-[#0D99FF]"
@@ -154,6 +155,7 @@ export default function RegisterForm() {
               <FormLabel className="text-gray-500">Email</FormLabel>
               <FormControl>
                 <Input
+                  disabled={isLoading}
                   placeholder="example@gmail.com"
                   type="email"
                   {...field}
@@ -173,6 +175,7 @@ export default function RegisterForm() {
               <FormLabel className="text-gray-500">Mật khẩu</FormLabel>
               <FormControl>
                 <Input
+                  disabled={isLoading}
                   placeholder="8+ characters"
                   type="password"
                   {...field}
@@ -192,6 +195,7 @@ export default function RegisterForm() {
               <FormLabel className="text-gray-500">Nhập lại mật khẩu</FormLabel>
               <FormControl>
                 <Input
+                  disabled={isLoading}
                   placeholder="8+ characters"
                   type="password"
                   {...field}

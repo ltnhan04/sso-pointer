@@ -123,6 +123,7 @@ export default function LoginForm() {
               <FormLabel className="text-gray-500">Email</FormLabel>
               <FormControl>
                 <Input
+                  disabled={isLoading}
                   placeholder="example@gmail.com"
                   type="email"
                   {...field}
@@ -143,6 +144,7 @@ export default function LoginForm() {
               <FormLabel className="text-gray-500">Mật khẩu</FormLabel>
               <FormControl>
                 <Input
+                  disabled={isLoading}
                   placeholder="8+ characters"
                   type="password"
                   {...field}
@@ -156,6 +158,7 @@ export default function LoginForm() {
         />
         <Button
           type="submit"
+          disabled={isLoading}
           className="!mt-8 w-full bg-[#0D99FF] transition-colors duration-300 ease-in-out hover:bg-[#0d9affc7]"
         >
           {!isLoading ? (
