@@ -1,5 +1,5 @@
 import RegisterForm from "@/app/(auth)/register/register-form";
-import HeroSection from "../../../../components/hero-section";
+import HeroSection from "../../../components/common/hero-section";
 
 export default function RegisterPage() {
   return (

@@ -1,6 +1,6 @@
-import Sidebar from "@/components/ui/sidebar";
+import Sidebar from "../../../components/common/sidebar";
 import React from "react";
-import HeaderComponent from "../../../../components/headerComponent";
+import HeaderComponent from "../../../components/common/headerComponent";
 import { FaLaptopCode } from "react-icons/fa";
 import { BsPhone } from "react-icons/bs";
 import { GrNext } from "react-icons/gr";
