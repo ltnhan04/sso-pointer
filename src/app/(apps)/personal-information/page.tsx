@@ -1,7 +1,7 @@
 "use client";
-import Sidebar from "@/components/ui/sidebar";
+import Sidebar from "../../../components/common/sidebar";
 import React, { useState } from "react";
-import HeaderComponent from "../../../../components/headerComponent";
+import HeaderComponent from "../../../components/common/headerComponent";
 import AvatarDefault from "../../../../public/images/avatardefault.png";
 import { MdModeEdit } from "react-icons/md";
 import { IoMdUnlock } from "react-icons/io";

@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Roboto } from "next/font/google";
 import { Toaster } from "@/components/ui/toaster";
 import { Suspense } from "react";
-import Providers from "../../components/providers";
+import Providers from "../components/common/providers";
 import "./globals.css";
 const roboto = Roboto({
   subsets: ["vietnamese"],

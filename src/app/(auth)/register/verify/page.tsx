@@ -1,6 +1,6 @@
 import React from "react";
-import HeroSection from "../../../../../components/hero-section";
-import InputOTPPattern from "../../../../../components/input-otp";
+import HeroSection from "../../../../components/common/hero-section";
+import InputOTPPattern from "../../../../components/common/input-otp";
 import Image from "next/image";
 export default function VerifyPage() {
   return (

@@ -1,6 +1,6 @@
 import React from "react";
-import Sidebar from "@/components/ui/sidebar";
-import HeaderComponent from "../../../../components/headerComponent";
+import Sidebar from "../../../components/common/sidebar";
+import HeaderComponent from "../../../components/common/headerComponent";
 // import { FaYoutube } from "react-icons/fa";
 // import { FaFacebookSquare } from "react-icons/fa";
 // import LogoWallet from '../../../../public/images/pointer.png'
