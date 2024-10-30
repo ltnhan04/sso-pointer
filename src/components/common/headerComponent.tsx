@@ -1,8 +1,8 @@
 import { LayoutGrid } from "lucide-react";
 import React from "react";
-import AvatarDefault from "/images/avatardefault.png";
-import LogoPointer from "/images/pointer.png";
-import Image from "next/image";
+const AvatarDefault = "/images/avatardefault.png";
+const LogoPointer = "/images/pointer.png";
+import Image from "next/image"; 
 
 export default function HeaderComponent({ title }: { title: string }) {
   return (
