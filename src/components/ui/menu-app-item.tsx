@@ -1,6 +1,5 @@
 import Image, { StaticImageData } from 'next/image'
 import Link from 'next/link'
-import { URL } from 'url'
 export default function MenuAppItem({imgPartner,namePartner,linkPartner}:{imgPartner:StaticImageData,namePartner:string,linkPartner:string}){
     return (
         <>

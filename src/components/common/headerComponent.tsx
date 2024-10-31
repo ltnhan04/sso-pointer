@@ -1,5 +1,5 @@
 'use client'
-import { Divide, LayoutGrid } from "lucide-react";
+import {LayoutGrid } from "lucide-react";
 import React, { useState } from "react";
 const AvatarDefault = "/images/avatardefault.png";
 const LogoPointer = "/images/pointer.png";
