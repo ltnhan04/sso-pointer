@@ -10,13 +10,6 @@ import {
   UserPen,
 } from "lucide-react";
 import React from "react";
-// import Image from "next/image";
-// import LogoPressPay from "../../../public/images/Logo.png";
-// import LogoPointer from "../../../public/images/pointer.png";
-// import { AnimatePresence, motion } from "framer-motion";
-// import ApplicationAppPage from "@/app/(apps)/home/page";
-// import PersonalInformationPage from "@/app/(apps)/personal-information/page";
-// import HistoryLoginPage from "@/app/(apps)/history-login/page";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 type SideBarItemsProps = {
@@ -49,7 +42,7 @@ export default function Sidebar() {
   ];
   return (
     <>
-      <div className="fixed flex text-lg left-0 overflow-hidden right-0 mt-[82px] space-x-[30px] justify-center lg:flex lg:flex-col lg:space-x-0 lg:space-y-[20px] lg:w-[300px] lg:px-4  lg:text-gray-700 lg:mt-[100px]">
+      <div className="fixed z-10 flex text-lg left-0 overflow-hidden right-0 mt-[82px] space-x-[30px] justify-center lg:flex lg:flex-col lg:space-x-0 lg:space-y-[20px] lg:w-[300px] lg:px-4  lg:text-gray-700 lg:mt-[100px]">
         {SidebarItems.map((items, index) => (
           <Link key={index} href={items.path}>
             <div
