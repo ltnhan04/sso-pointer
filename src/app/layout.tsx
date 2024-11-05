@@ -22,6 +22,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${roboto.className} bg-white`}>
+     
         <Toaster />
         <Suspense>
           <Providers>{children}</Providers>
