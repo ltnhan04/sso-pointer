@@ -1,10 +1,9 @@
-'use client'
+"use client";
 const AvatarDefault = "/images/avatardefault.png";
 const LogoPointer = "/images/pointer.png";
-import Image from "next/image"; 
+import Image from "next/image";
 
 export default function HeaderComponent({ title }: { title: string }) {
-
   return (
     <>
       <div className="fixed z-20 top-0 left-0 right-0 w-full bg-white flex justify-between items-center p-4 border-b-2">
