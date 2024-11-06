@@ -71,7 +71,7 @@ export default function LoginForm() {
     },
     onSuccess: (response) => {
       const { accessToken, refreshToken } = response.data;
-
+      
       setCookie("accessToken", accessToken, { maxAge: 60 * 15 });
       setCookie("refreshToken", refreshToken, { maxAge: 60 * 60 * 24 * 15 });
 
