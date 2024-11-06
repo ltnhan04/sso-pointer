@@ -59,3 +59,53 @@ export const authorizeAPI = async (accessToken: string) => {
     }
   );
 };
+
+//Create new OAuth App
+interface newOAuthAppProps {
+  applicationName: string
+  applicationDescription: string
+  homePageUrl:string
+  callBackUrl:string
+  accessToken: string
+}
+
+export const newOAuthApp = async (props: newOAuthAppProps) => {
+  const {applicationName,applicationDescription,homePageUrl,callBackUrl,accessToken} = props
+  console.log(props)
+  return await axios.post(`${process.env.NEXT_PUBLIC_API_ENDPOINT}/auth/new-oauth-app`,{
+    applicationName,applicationDescription,homePageUrl,callBackUrl
+  }, {
+    headers: {
+      Authorization: `Bearer ${accessToken}`
+    }
+  })
+}
+
+
+//Get OAuth App
+export const getOAuthApp = async (accessToken: string) => {
+  return await axios.get(`${process.env.NEXT_PUBLIC_API_ENDPOINT}/auth/get-apps`, {
+    headers: {
+      Authorization: `Bearer ${accessToken}`
+    }
+  })}
+    
+//GetDetail OAuth App
+export const getDetailOAuthApp = async (id:string,accessToken:string) => {
+  return await axios.get(`${process.env.NEXT_PUBLIC_API_ENDPOINT}/auth/app-details/${id}`,{
+    headers: {
+      Authorization: `Bearer ${accessToken}`
+    }
+  })
+}
+
+//Generate client secret
+export const GenerateClient = async (accessToken:string,ClientId: string) => {
+  return await axios.post(`${process.env.NEXT_PUBLIC_API_ENDPOINT}/auth/generate-client-secret`,{
+    ClientId
+  },{
+    headers: {
+      Authorization: `Beaer ${accessToken}`
+    }
+  })
+}

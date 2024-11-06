@@ -5,19 +5,39 @@ import Sidebar from "@/components/common/sidebar";
 import Image from "next/image";
 import logo from '../../../../public/images/pointer.png'
 import { useRouter } from "next/navigation";
+import { useQuery } from "@tanstack/react-query";
+import { getOAuthApp } from "@/app/api/auth/auth";
+import nookies from 'nookies'
+interface OAuthAppItem {
+    readonly _id:string,
+    applicationName: string,
+    image?: string
+}
 
 export default function OAuthApp() {
+    const cookies = nookies.get();
+    const accessToken = cookies.accessToken || ''
     const router = useRouter();
 
+    const {data,isLoading,isError} = useQuery({
+        queryKey: ['get-oauth-app'],
+        queryFn : async () => {
+            const response = await getOAuthApp(accessToken)
+            return response.data
+        }
+    })
+    if(isLoading) return 'Loading...'
+    if(isError) return 'Error'
+    console.log(data)
+    if (!data || !Array.isArray(data)) {
+        return <p>No data availble</p>
+    }
     const handleClickNews = () => {
         router.push('oauth-app/news')
     }
-    const data1 = [
-        {
-            name: 'Pointer Wallet',
-            image: logo
-        }
-    ]
+    const handleEdit = (_id: string) => {
+        router.push(`/oauth-app/edit/${_id}`);
+    };
     return (
         <>
             <div className="w-full h-screen overflow-auto">
@@ -32,14 +52,17 @@ export default function OAuthApp() {
                             </button>
                         </div>
                     </div>
-                    {data1.map((item,index) => (
+                    {data.map((item:OAuthAppItem,index:number) => (
                         <div key={index} className="grid grid-cols-[60px_1fr_80px] border-[1px] px-4 py-4 mt-4 rounded-[6px]">
-                            <Image src={item.image} alt="Logo" width={50} height={50} />
+                            <Image src={item.image ? item.image : logo} alt="Logo" width={50} height={50} />
                             <div>
-                                <p className="text-lg text-blue-500">{item.name}</p>
-                                <p className="text-sm text-gray-400">Last used within last week. Owned by <u className="text-blue-500">{item.name}</u></p>
+                                <p className="text-lg text-blue-500">{item.applicationName}</p>
+                                <p className="text-sm text-gray-400">Last used within last week. Owned by <u className="text-blue-500">{item.applicationName}</u></p>
                             </div>
-                            <button className="text-sm font-medium h-fit bg-gray-200 border-gray-400 border-[1px] rounded-lg w-[80px] text-center px-[12px] py-[3px] hover:bg-gray-500 hover:text-white hover:transition-colors hover:duration-300 active:opacity-60 active:transform-colors active:duration-300">
+                            <button 
+                                onClick={() => handleEdit(item._id)}
+                                className="text-sm font-medium h-fit bg-gray-200 border-gray-400 border-[1px] rounded-lg w-[80px] text-center px-[12px] py-[3px] hover:bg-gray-500 hover:text-white hover:transition-colors hover:duration-300 active:opacity-60 active:transform-colors active:duration-300"
+                            >
                                 Edit
                             </button>
                         </div>
