@@ -23,7 +23,6 @@ export default function PersonalInformationPage() {
   },[])
   const {getRootProps,getInputProps} = useDropzone({onDrop})
 
-
   const handleClick = () => {
     setHideForm((prev) => !prev);
   };
