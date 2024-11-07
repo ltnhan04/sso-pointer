@@ -11,7 +11,7 @@ export default function HistoryLoginPage() {
       <HeaderComponent title="History Login" />
       <Sidebar />
       <div className="mt-[125px] lg:mt-[100px] lg:ml-[320px] lg:max-w-[1300px] mx-auto">
-      <div id="Content" className="mt-[40px] border">
+        <div id="Content" className="mt-[40px] border">
           <div className="grid sm:grid-cols-1 lg:grid-cols-[250px_1fr] lg:space-x-[30px]  py-6 px-3 ">
             <p className="flex items-center space-x-[10px]">
               <FaLaptopCode className="text-5xl" />

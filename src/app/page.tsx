@@ -2,22 +2,42 @@
 import React from "react";
 import { useQuery } from "@tanstack/react-query";
 import { getProfile } from "./api/auth/auth";
-import Loading from "@/app/loading";
+import HeaderComponent from "@/components/common/headerComponent";
+import Sidebar from "@/components/common/sidebar";
+import Image from "next/image";
+import AvatarDefault from "../../public/images/avatardefault.png";
+import { getCookie } from "cookies-next";
 export default function Home() {
   const { data, isLoading } = useQuery({
-    queryKey: ["user"],
+    queryKey: ["get-email-user"],
     queryFn: async () => {
-      const rs = await getProfile();
-      return rs.data;
+      const token = getCookie("accessToken") || " ";
+      const response = await getProfile(token);
+      return response.data;
     },
   });
+  if (isLoading) return "Loading...";
   return (
-    <div className="text-center mt-5">
-      {isLoading ? (
-        <Loading />
-      ) : (
-        <h1 className="text-primary">Hello, {data?.email}</h1>
-      )}
-    </div>
+    <>
+      <div className="w-full h-screen overflow-auto ">
+        <HeaderComponent title="Home" />
+        <Sidebar />
+        <div className="mt-[125px] max-w-[1000px] lg:mt-[100px] lg:ml-[320px] mx-auto ">
+          <div className="flex items-center justify-center space-x-[20px] pt-3 font-medium text-2xl">
+            <Image
+              src={AvatarDefault}
+              alt="Avatar"
+              width={60}
+              height={60}
+              className="rounded-full"
+            />
+            <p>Xin chào {data?.email} </p>
+          </div>
+          <p className="text-center text-3xl mt-3 text-gray-400">
+            Chào mừng bạn đến với Pointer
+          </p>
+        </div>
+      </div>
+    </>
   );
 }

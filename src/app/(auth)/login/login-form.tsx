@@ -30,7 +30,7 @@ interface ErrorResponse {
 
 export default function LoginForm() {
   const searchParams = useSearchParams();
-  const callbackUrl = searchParams.get("callbackUrl") || " ";
+  const clientId = searchParams.get("clientId") || " ";
   const router = useRouter();
   const { toast } = useToast();
   const [isLoading, setIsLoading] = useState(false);
@@ -93,8 +93,9 @@ export default function LoginForm() {
           </span>
         ),
       });
-      if (callbackUrl) {
-        router.push(`/authorize?callbackUrl=${callbackUrl}`);
+      console.log(clientId);
+      if (clientId !== " ") {
+        router.push(`/authorize?clientId=${clientId}`);
         return;
       }
       router.push("/");

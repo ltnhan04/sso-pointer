@@ -1,6 +1,6 @@
 "use client";
 import Sidebar from "../../../components/common/sidebar";
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 import HeaderComponent from "../../../components/common/headerComponent";
 import AvatarDefault from "../../../../public/images/avatardefault.png";
 import { MdModeEdit } from "react-icons/md";
@@ -10,8 +10,19 @@ import { useForm } from "react-hook-form";
 import { schema, SchemaPassword } from "../../../schemaValidations/form.schema";
 import { IoClose } from "react-icons/io5";
 import Image from "next/image";
+import { useDropzone } from "react-dropzone";
 export default function PersonalInformationPage() {
   const [hideForm, setHideForm] = useState<boolean>(false);
+  const [avatarURL, setAvatarURL] = useState<string | null>(null);
+  const onDrop = useCallback((acceptFile: File[]) => {
+    if (acceptFile.length > 0) {
+      const fileURL = URL.createObjectURL(acceptFile[0]);
+      setAvatarURL(fileURL);
+    }
+    console.log(acceptFile);
+  }, []);
+  const { getRootProps, getInputProps } = useDropzone({ onDrop });
+
   const handleClick = () => {
     setHideForm((prev) => !prev);
   };
@@ -44,9 +55,13 @@ export default function PersonalInformationPage() {
               <p className="text-gray-900 font-bold text-lg">Avatar Profile</p>
               <p>Avatar create unique for your account</p>
             </div>
-            <div className="lg:w-fit flex justify-center items-center">
+            <div
+              {...getRootProps()}
+              className="lg:w-fit flex justify-center items-center"
+            >
+              <input {...getInputProps()} />
               <Image
-                src={AvatarDefault}
+                src={avatarURL || AvatarDefault}
                 alt="Avatar"
                 width={60}
                 height={60}
