@@ -3,7 +3,13 @@ import { GenerateClient, getDetailOAuthApp } from "@/app/api/auth/auth";
 import HeaderComponent from "@/components/common/headerComponent";
 import InputComponent from "@/components/ui/input-component";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { Check, KeyRound, LoaderCircle, Square, SquareCheckBig } from "lucide-react";
+import {
+  Check,
+  KeyRound,
+  LoaderCircle,
+  Square,
+  SquareCheckBig,
+} from "lucide-react";
 import Image from "next/image";
 import nookies from "nookies";
 import { useCallback, useState } from "react";
@@ -12,29 +18,28 @@ import Logo from "../../../../../../public/images/pointer.png";
 import AvatarDefault from "../../../../../../public/images/avatardefault.png";
 import { useParams } from "next/navigation";
 export interface Root {
-  _id: string
-  applicationName: string
-  applicationDescription: string
-  clientSecrets: ClientSecret[]
-  homePageUrl: string
-  callBackUrl: string
-  userID: UserId
-  createdAt: string
-  updatedAt: string
-  totalUser: number
+  _id: string;
+  applicationName: string;
+  applicationDescription: string;
+  clientSecrets: ClientSecret[];
+  homePageUrl: string;
+  callBackUrl: string;
+  userID: UserId;
+  createdAt: string;
+  updatedAt: string;
+  totalUser: number;
 }
 
 export interface ClientSecret {
-  clientSecret: string
-  userID: string
-  _id: string
+  clientSecret: string;
+  userID: string;
+  _id: string;
 }
 
 export interface UserId {
-  _id: string
-  email: string
+  _id: string;
+  email: string;
 }
-
 
 export default function OAuthDetail() {
   const [applicationName, setApplicationName] = useState("");
@@ -44,8 +49,8 @@ export default function OAuthDetail() {
   const [avatarURL, setAvatarURL] = useState<string | null>(null);
   const [isCheck, setIsCheck] = useState(false);
   const [isOpen, setIsOpen] = useState<boolean>(false);
-  const [clientSecrets,SetClientSecrets] = useState<ClientSecret[]>([])
-  
+  const [clientSecrets, SetClientSecrets] = useState<ClientSecret[]>([]);
+
   const onDrop = useCallback((acceptionFile: File[]) => {
     if (acceptionFile.length > 0) {
       const fileUrl = URL.createObjectURL(acceptionFile[0]);
@@ -63,12 +68,12 @@ export default function OAuthDetail() {
   const mutation = useMutation({
     mutationKey: ["client-key-create"],
     mutationFn: async () => {
-      const response =  await GenerateClient(id as string, accessToken);
-      return response.data 
+      const response = await GenerateClient(id as string, accessToken);
+      return response.data;
     },
-    onSuccess: (newClient:ClientSecret) => {
-        SetClientSecrets((prev) => [...prev,newClient])
-        setIsOpen(false)
+    onSuccess: (newClient: ClientSecret) => {
+      SetClientSecrets((prev) => [...prev, newClient]);
+      setIsOpen(false);
     },
   });
 
@@ -112,24 +117,25 @@ export default function OAuthDetail() {
           </div>
           <div className="space-y-[8px] border-b py-4">
             <p className="text-[18px]">Client ID</p>
-            <p className="text-[16px] font-mono">{data?.userID._id}</p>
+            <p className="text-[16px] font-mono">{data?._id}</p>
           </div>
           <div className="border-b py-4">
             <div className="grid grid-cols-[1fr_180px] py-4">
               <p className="text-[18px]">Client secrets</p>
               <button
-                disabled = {isOpen}
+                disabled={isOpen}
                 value={isOpen ? "true" : "false"}
                 onClick={handleGenericKey}
                 className="text-[12px] text-center font-medium bg-gray-200 border-[1px] border-gray-400 py-[5px] px-[12px] rounded-[6px]"
               >
-               {isOpen ? (
-                    <div className="flex items-center justify-center">
-                      <LoaderCircle className="size-4 animate-spin mr-1"/> 
-                      <p>Loading</p>
-                    </div>
-               )
-               : 'Generate a new client secret'}
+                {isOpen ? (
+                  <div className="flex items-center justify-center">
+                    <LoaderCircle className="size-4 animate-spin mr-1" />
+                    <p>Loading</p>
+                  </div>
+                ) : (
+                  "Generate a new client secret"
+                )}
               </button>
             </div>
             <p className="text-[14px] text-gray-700">
@@ -137,8 +143,11 @@ export default function OAuthDetail() {
               API.
             </p>
           </div>
-          {clientSecrets.map((item:ClientSecret, index:number) => (
-            <div key={index} className="grid grid-cols-[120px_1fr] border-b py-4">
+          {clientSecrets.map((item: ClientSecret, index: number) => (
+            <div
+              key={index}
+              className="grid grid-cols-[120px_1fr] border-b py-4"
+            >
               <div className="text-[18px] font-bold flex flex-col justify-center items-center w-fit">
                 <KeyRound />
                 <p>Client Key</p>
@@ -156,8 +165,11 @@ export default function OAuthDetail() {
               </div>
             </div>
           ))}
-          {data?.clientSecrets.map((item:ClientSecret, index:number) => (
-            <div key={index} className="grid grid-cols-[120px_1fr] border-b py-4">
+          {data?.clientSecrets.map((item: ClientSecret, index: number) => (
+            <div
+              key={index}
+              className="grid grid-cols-[120px_1fr] border-b py-4"
+            >
               <div className="text-[18px] font-bold flex flex-col justify-center items-center w-fit">
                 <KeyRound />
                 <p>Client Key</p>

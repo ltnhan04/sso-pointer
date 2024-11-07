@@ -30,7 +30,7 @@ interface ErrorResponse {
 
 export default function LoginForm() {
   const searchParams = useSearchParams();
-  const callbackUrl = searchParams.get("callbackUrl") || " ";
+  const clientId = searchParams.get("clientId") || " ";
   const router = useRouter();
   const { toast } = useToast();
   const [isLoading, setIsLoading] = useState(false);
@@ -71,10 +71,8 @@ export default function LoginForm() {
     },
     onSuccess: (response) => {
       const { accessToken, refreshToken } = response.data;
-      
-      setCookie("accessToken", accessToken, { maxAge: 60 * 15 });
+      setCookie("accessToken", accessToken, { maxAge: 60 * 60  });
       setCookie("refreshToken", refreshToken, { maxAge: 60 * 60 * 24 * 15 });
-
       toast({
         className: `
           bg-[#0D99FF] 
@@ -95,8 +93,9 @@ export default function LoginForm() {
           </span>
         ),
       });
-      if (callbackUrl) {
-        router.push(`/authorize?callbackUrl=${callbackUrl}`);
+      console.log(clientId);
+      if (clientId !== " ") {
+        router.push(`/authorize?clientId=${clientId}`);
         return;
       }
       router.push("/");

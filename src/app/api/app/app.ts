@@ -12,6 +12,17 @@ export const getApps = async () => {
     }
   );
 };
+export const getAuthorizedApps = async (token: string) => {
+  return await axios.get(
+    `${process.env.NEXT_PUBLIC_API_ENDPOINT}/auth/get-authorized-apps`,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+};
+
 interface IApp {
   applicationName: string;
   applicationDescription: string;
