@@ -117,7 +117,7 @@ const AppDetails: React.FC<AppDetailsProps> = ({ params }) => {
             <CardContent className="space-y-4">
               <div>
                 <p className="text-gray-500 font-semibold">ClientId:</p>
-                <p>{params}</p>
+                <p>{data?._id}</p>
               </div>
               <div>
                 <p className="text-gray-500 font-semibold">Description:</p>
