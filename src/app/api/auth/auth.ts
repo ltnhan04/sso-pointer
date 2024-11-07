@@ -100,9 +100,9 @@ export const getDetailOAuthApp = async (id:string,accessToken:string) => {
 }
 
 //Generate client secret
-export const GenerateClient = async (accessToken:string,ClientId: string) => {
+export const GenerateClient = async (clientId: string,accessToken:string) => {
   return await axios.post(`${process.env.NEXT_PUBLIC_API_ENDPOINT}/auth/generate-client-secret`,{
-    ClientId
+    clientId
   },{
     headers: {
       Authorization: `Beaer ${accessToken}`

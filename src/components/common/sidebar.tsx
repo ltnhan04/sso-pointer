@@ -34,7 +34,7 @@ export default function Sidebar() {
       name: "Home",
       icon: House,
       color: "#374151",
-      path: "/home",
+      path: "/",
     },
     {
       name: "Application",
