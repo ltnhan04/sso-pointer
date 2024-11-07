@@ -2,8 +2,8 @@
 import { GenerateClient, getDetailOAuthApp } from "@/app/api/auth/auth";
 import HeaderComponent from "@/components/common/headerComponent";
 import InputComponent from "@/components/ui/input-component";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { Check, KeyRound, Square, SquareCheckBig } from "lucide-react";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { Check, KeyRound, LoaderCircle, Square, SquareCheckBig } from "lucide-react";
 import Image from "next/image";
 import nookies from "nookies";
 import { useCallback, useState } from "react";
@@ -11,6 +11,31 @@ import { useDropzone } from "react-dropzone";
 import Logo from "../../../../../../public/images/pointer.png";
 import AvatarDefault from "../../../../../../public/images/avatardefault.png";
 import { useParams } from "next/navigation";
+export interface Root {
+  _id: string
+  applicationName: string
+  applicationDescription: string
+  clientSecrets: ClientSecret[]
+  homePageUrl: string
+  callBackUrl: string
+  userID: UserId
+  createdAt: string
+  updatedAt: string
+  totalUser: number
+}
+
+export interface ClientSecret {
+  clientSecret: string
+  userID: string
+  _id: string
+}
+
+export interface UserId {
+  _id: string
+  email: string
+}
+
+
 export default function OAuthDetail() {
   const [applicationName, setApplicationName] = useState("");
   const [applicationDescription, setApplicationDescription] = useState("");
@@ -18,7 +43,9 @@ export default function OAuthDetail() {
   const [callBackUrl, setCallBackUrl] = useState("");
   const [avatarURL, setAvatarURL] = useState<string | null>(null);
   const [isCheck, setIsCheck] = useState(false);
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [clientSecrets,SetClientSecrets] = useState<ClientSecret[]>([])
+  
   const onDrop = useCallback((acceptionFile: File[]) => {
     if (acceptionFile.length > 0) {
       const fileUrl = URL.createObjectURL(acceptionFile[0]);
@@ -31,44 +58,46 @@ export default function OAuthDetail() {
   });
   const cookies = nookies.get();
   const accessToken = cookies.accessToken || "";
-  const queryClient = useQueryClient();
   const { id } = useParams();
 
   const mutation = useMutation({
     mutationKey: ["client-key-create"],
     mutationFn: async () => {
-      return await GenerateClient(data.userID._id, accessToken);
+      const response =  await GenerateClient(id as string, accessToken);
+      return response.data 
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["client-key-create"] });
+    onSuccess: (newClient:ClientSecret) => {
+        SetClientSecrets((prev) => [...prev,newClient])
+        setIsOpen(false)
     },
   });
 
-  const { data, isLoading, isError } = useQuery({
+  const { data, isLoading, isError } = useQuery<Root>({
     queryKey: ["get-oauth-app-detail", id],
     queryFn: async () => {
       const response = await getDetailOAuthApp(id as string, accessToken);
       return response.data;
     },
   });
+
   console.log(data);
   if (isLoading) return "Loading...";
   if (isError) return "Error...";
 
   const handleGenericKey = () => {
     mutation.mutate();
-    setIsOpen((prev) => !prev);
+    setIsOpen(true);
   };
   return (
     <>
-      <div className="w-full h-screen overflow-auto">
+      <div className="w-full">
         <HeaderComponent title="Edit" />
         <div className="w-[700px] mt-[125px] mx-auto">
           <div className="flex items-center space-x-[6px] text-[14px] border-b py-4">
             <Image src={Logo} alt="Logo" width={50} height={50} />
             <p>
               <span className="text-blue-500 font-medium">
-                {data.applicationName}
+                {data?.applicationName}
               </span>{" "}
               owns this application
             </p>
@@ -83,17 +112,24 @@ export default function OAuthDetail() {
           </div>
           <div className="space-y-[8px] border-b py-4">
             <p className="text-[18px]">Client ID</p>
-            <p className="text-[16px] font-mono">{data.userID._id}</p>
+            <p className="text-[16px] font-mono">{data?.userID._id}</p>
           </div>
           <div className="border-b py-4">
             <div className="grid grid-cols-[1fr_180px] py-4">
               <p className="text-[18px]">Client secrets</p>
               <button
+                disabled = {isOpen}
                 value={isOpen ? "true" : "false"}
                 onClick={handleGenericKey}
                 className="text-[12px] text-center font-medium bg-gray-200 border-[1px] border-gray-400 py-[5px] px-[12px] rounded-[6px]"
               >
-                Generate a new client secret
+               {isOpen ? (
+                    <div className="flex items-center justify-center">
+                      <LoaderCircle className="size-4 animate-spin mr-1"/> 
+                      <p>Loading</p>
+                    </div>
+               )
+               : 'Generate a new client secret'}
               </button>
             </div>
             <p className="text-[14px] text-gray-700">
@@ -101,8 +137,8 @@ export default function OAuthDetail() {
               API.
             </p>
           </div>
-          {isOpen && (
-            <div className="grid grid-cols-[150px_1fr] border-b py-4">
+          {clientSecrets.map((item:ClientSecret, index:number) => (
+            <div key={index} className="grid grid-cols-[120px_1fr] border-b py-4">
               <div className="text-[18px] font-bold flex flex-col justify-center items-center w-fit">
                 <KeyRound />
                 <p>Client Key</p>
@@ -110,7 +146,7 @@ export default function OAuthDetail() {
               <div className="text-[14px] text-gray-700">
                 <div className="flex items-center">
                   <Check className="text-green-500" />
-                  <p>djaksldjalsjd</p>
+                  <p>{item.clientSecret}</p>
                 </div>
                 <p>Never used</p>
                 <p>
@@ -119,7 +155,26 @@ export default function OAuthDetail() {
                 </p>
               </div>
             </div>
-          )}
+          ))}
+          {data?.clientSecrets.map((item:ClientSecret, index:number) => (
+            <div key={index} className="grid grid-cols-[120px_1fr] border-b py-4">
+              <div className="text-[18px] font-bold flex flex-col justify-center items-center w-fit">
+                <KeyRound />
+                <p>Client Key</p>
+              </div>
+              <div className="text-[14px] text-gray-700">
+                <div className="flex items-center">
+                  <Check className="text-green-500" />
+                  <p>{item.clientSecret}</p>
+                </div>
+                <p>Never used</p>
+                <p>
+                  You cannot delete the only client secret. Generate a new
+                  client secret first.
+                </p>
+              </div>
+            </div>
+          ))}
           <div>
             <div className="py-4">
               <p className="font-medium py-2">Application logo</p>

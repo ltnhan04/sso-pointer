@@ -3,21 +3,20 @@ import { newOAuthApp } from "@/app/api/auth/auth";
 import HeaderComponent from "@/components/common/headerComponent";
 import InputComponent from "@/components/ui/input-component";
 import { useMutation } from "@tanstack/react-query";
-import { Square, SquareCheckBig } from "lucide-react";
+import {LoaderCircle} from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import nookies from "nookies";
 import { useQueryClient } from "@tanstack/react-query";
+import ToastV2 from "@/components/ui/toast-v2";
 export default function News() {
   const [applicationName, setApplicationName] = useState("");
   const [applicationDescription, setApplicationDescription] = useState("");
   const [homePageUrl, setHomePageUrl] = useState("");
   const [callBackUrl, setCallBackUrl] = useState("");
-  const [isCheck, setIsCheck] = useState(false);
-
+  const [showToast,setShowToast] = useState(false)
   const queryClient = useQueryClient();
   const router = useRouter();
-
   const cookies = nookies.get();
   const accessToken = cookies.accessToken || "";
   const mutation = useMutation({
@@ -33,12 +32,15 @@ export default function News() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["create-oauth-app"] });
+      setTimeout(() => setShowToast(false),3000)
+      ToastV2()
+      router.push("/oauth-app");
+
     },
   });
 
   const handleClickRegister = () => {
     mutation.mutate();
-    router.push("/oauth-app");
   };
   return (
     <div className="w-full h-screen overflow-auto">
@@ -84,38 +86,28 @@ export default function News() {
               label="Authorization callback URL"
               subtitle="Your application's callback URL. Read our OAuth documentation for more information."
             />
-            <div className="flex items-center space-x-[6px]">
-              <div onClick={() => setIsCheck(!isCheck)}>
-                {isCheck ? (
-                  <SquareCheckBig className="size-[16px]" />
-                ) : (
-                  <Square className="size-[16px]" />
-                )}
-              </div>
-              <p className="font-medium">Enable Device Flow</p>
-            </div>
-            <div className="text-[12px] text-gray-500 border-b pb-4">
-              <p>
-                Allow this OAuth App to authorize users via the Device Flow.
-              </p>
-              <p>
-                Read the{" "}
-                <u className="text-blue-500">Device Flow documentation</u> for
-                more information.
-              </p>
-            </div>
             <div>
-              <div className="space-x-[10px]">
+              <div className="space-x-[10px] flex">
                 <button
                   onClick={handleClickRegister}
-                  className="bg-blue-700 text-white text-center hover:bg-blue-800 active:opacity-70 transition-all duration-300 py-[5px] px-[16px] text-[14px] rounded-[6px]"
+                  className="bg-blue-700 text-white w-[160px] text-center hover:bg-blue-800 active:opacity-70 transition-all duration-300 py-[5px] px-[16px] text-[14px] rounded-[6px]"
                 >
-                  Register application
+                  {mutation.isPending
+                  ? (
+                    <div className="flex justify-center">
+                      <LoaderCircle className="size-5 animate-spin mr-2"/>
+                      <p>Loading</p>
+                    </div>
+                    )
+                  : 'Register application'}
                 </button>
                 <button className="text-blue-700 text-[14px] hover:bg-gray-200 py-[5px] px-[16px] rounded-[6px]">
                   Cancel
                 </button>
               </div>
+              {showToast && (
+                <ToastV2/>
+              )}
             </div>
           </div>
         </div>
