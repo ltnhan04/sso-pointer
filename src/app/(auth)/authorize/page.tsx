@@ -26,10 +26,10 @@ const Index = () => {
   const { mutate } = useMutation({
     mutationFn: async () => {
       const token = getCookie("accessToken") || " ";
-      const res = await authorizeAPI(token,clientId);
+      const res = await authorizeAPI(token, clientId);
       return res.data;
     },
-    onSuccess(data, variables, context) {
+    onSuccess(data) {
       console.log(data);
       location.replace(`${callBackUrl}?code=${data.code}`);
     },
