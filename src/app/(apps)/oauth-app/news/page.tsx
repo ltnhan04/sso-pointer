@@ -43,7 +43,7 @@ export default function News() {
     mutation.mutate();
   };
   return (
-    <div className="w-full h-screen overflow-auto">
+    <div className="w-full h-screen overflow-auto text-black">
       <HeaderComponent title="Register a new OAuth App" />
       <div className="w-[700px] mt-[125px] mx-auto">
         <div className="flex flex-col items-center justify-center">

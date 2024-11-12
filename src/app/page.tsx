@@ -19,7 +19,7 @@ export default function Home() {
   if (isLoading) return "Loading...";
   return (
     <>
-      <div className="w-full h-screen overflow-auto ">
+      <div className="w-full h-screen overflow-auto  ">
         <HeaderComponent title="Home" />
         <Sidebar />
         <div className="mt-[125px] max-w-[1000px] lg:mt-[100px] lg:ml-[320px] mx-auto ">
@@ -31,7 +31,7 @@ export default function Home() {
               height={60}
               className="rounded-full"
             />
-            <p>Xin chào {data?.email} </p>
+            <p className="text-black">Xin chào {data?.email} </p>
           </div>
           <p className="text-center text-3xl mt-3 text-gray-400">
             Chào mừng bạn đến với Pointer

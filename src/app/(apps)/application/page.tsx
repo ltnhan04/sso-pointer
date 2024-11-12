@@ -31,7 +31,7 @@ export default function Application() {
         <HeaderComponent title="Application App" />
         <Sidebar />
         <div className="mt-[125px] max-w-[1000px] lg:mt-[100px] lg:ml-[320px] mx-auto ">
-          <p>
+          <p className="text-black">
             You have granted <b>1 applications</b> access to your account
           </p>
           {data?.map((item: App, index: number) => (
