@@ -7,7 +7,7 @@ import { GrNext } from "react-icons/gr";
 import { FaCheckCircle } from "react-icons/fa";
 export default function HistoryLoginPage() {
   return (
-    <div className="w-full h-screen overflow-auto">
+    <div className="w-full h-screen overflow-auto text-black">
       <HeaderComponent title="History Login" />
       <Sidebar />
       <div className="mt-[125px] lg:mt-[100px] lg:ml-[320px] lg:max-w-[1300px] mx-auto">
