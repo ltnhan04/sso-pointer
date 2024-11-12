@@ -95,7 +95,7 @@ export default function OAuthDetail() {
   };
   return (
     <>
-      <div className="w-full">
+      <div className="w-full text-black">
         <HeaderComponent title="Edit" />
         <div className="w-[700px] mt-[125px] mx-auto">
           <div className="flex items-center space-x-[6px] text-[14px] border-b py-4">
