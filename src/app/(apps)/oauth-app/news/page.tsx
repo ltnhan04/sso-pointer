@@ -71,7 +71,7 @@ export default function News() {
                   type="text"
                   value={applicationDescription}
                   onChange={(e) => setApplicationDescription(e.target.value)}
-                  className="w-full h-[50px] outline-none bg-gray-200 border-gray-400 border-[1px] py-[3px] px-[12px] rounded-[6px] placeholder:text-[14px] placeholder:text-gray-500 focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
+                  className="w-full h-[50px] outline-none text-black bg-gray-200 border-gray-400 border-[1px] py-[3px] px-[12px] rounded-[6px] placeholder:text-[14px] placeholder:text-gray-500 focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
                   placeholder="Application description is optional"
                 />
               </div>
